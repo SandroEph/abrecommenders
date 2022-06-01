@@ -130,3 +130,10 @@ dmypy.json
 
 # Dataset folder
 data/
+
+#Mac Desktop Service
+.DS_Store
+.DS_Store?
+
+#Pycharm files
+.idea/
