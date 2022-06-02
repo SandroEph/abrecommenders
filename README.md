@@ -11,7 +11,6 @@ An end-to-end implementation of online recommender systems A/B testing
 * [Data](#data)
 * [Data preprocessing](#data-preprocessing)
 * [Recommender system](#recommender-system)
-* [Recommender system results](#recommender-system-results)
 * [Experiment design](#experiment-design)
 * [Integration and deployment](#integration-and-deployment)
 * [Results](#results)
@@ -24,11 +23,11 @@ An end-to-end implementation of online recommender systems A/B testing
 This is the first repository/tutorial from a series of others where I challenge myself to build, deploy and 
 explain an end to end data science solution to a concrete business use case.
 
-For this first project, the goal is to train a new recommendation system based on the MovieLens dataset, 
-recommending new movies to users and then deploy this new model side to side with an existing one in order to 
-A/B test those two recommendation systems to see if the new one improves the click-through rate  (users clicking on
-recommendations they are presented).
+For this first project, the main goal is to demonstrate the design and deployment of an A/B test experiment comparing
+the end business value of two different recommender systems (the user clicking on the recommendations).
 
+While the compared machine learning models are recommendation systems, the approach detailed here works for comparing
+two models of any type.
 ## Background
 
 This project is inspired from a question I was asked during an interview : 
@@ -44,34 +43,50 @@ So here we go !
 Design and deploy an A/B test experiment evaluating and comparing the online performance of two different recommender 
 systems.
 #### Secondary objectives : 
-* Design and train a recommender system model
+* Train recommender systems
 * Develop and deploy a proof of concept product website to run the experiment
 * Automate the A/B testing experiment for testing purposes
 
-## Business Case
+## Example Business Case
 
-Funflix, a movie streaming platform, wants to improve its recommendation engine. The current model used in production 
-was trained on older user data and has a current click-through rate of 7% (called the baseline CTR).
-The Funflix data science team wants to try developing a newer recommender system, then testing whether it will improve
-click-through rate and give more relevant recommendations.
+Funflix, a movie streaming platform, wants to improve its recommendation engine. The model currently used in production 
+has a click-through rate of 7% (called the baseline CTR). The Funflix data science team has developed
+a newer recommender system, that supposedly recommends more relevant movies, and wants to test if it improves
+user recommendation click-through rate.
 
 ## System design
 
-Recommendations prediction request from user traffic will be routed randomly to one of the two recommender systems
-and recommendations will be shown on the website. If the user clicks on one of the recommendations, 
+The MovieLens 25M dataset will first be used to train two recommender systems, the baseline model and the supposedly
+new model.
+Recommendations prediction request from user traffic will be routed randomly to one of the two recommender
+systems and recommendations will be shown on the website. If the user clicks on one of the recommendations, 
 the click will be collected and stored to evaluate possible statistically significant change in click-through rate.
 
 ![System diagram](./ressources/system_diagram.png)
 
-Seldon Core will be used to deploy the two recommender systems. It will make this A/B testing experiment easier as
+Kubernetes and Seldon Core will be used to deploy the two recommender systems. It will make this A/B testing experiment easier as
 it will provide a unified endpoint to query for recommendations, taking care of the random routing and even feedback
 and evaluation loop by collecting custom metrics such as in this case the click-through rate through a 
 special feedback endpoint. It also integrates well with Prometheus and Grafana and that will allow us 
 to monitor the experiment's results.
 
+Flask will be used to build a mock website in order to test the implementation and run the mock A/B test experiment 
+and selenium will be used to simulate user traffic and interaction on this website.
+
 One ida to improve this overall system would be to also implement periodical online re-training so that the model 
-would take into consideration possible new user interactions with movies. This improvement brings alone its fair share
-of new problems (eg. long and costly retraining, A/B testing statistics) so we'll leave it to maybe another project !
+would take into consideration new user interactions with movies. This improvement brings alone its fair share
+of new problems (eg. long and costly retraining, adapting the A/B testing statistics) so we will focus here on the
+deployment and serving of the models and the A/B test experiment.
+
+## Project steps
+
+1. Train the two compared recommender systems (baseline and new)
+2. Design the A/B experiment
+3. Deploy and serve the two models, configure deployment
+4. Test deployment and serving
+5. Develop the mock website
+6. Automate user traffic and interaction
+7. Explore and interpret the A/B experiment results
 
 ## Tools and packages
 
@@ -102,7 +117,10 @@ The code in this repository assumes that the data is present in the ```/data``` 
 
 ## Recommender system
 
-## Recommender system results
+It is worth noting that the recommender system obtained is still not perfect, especially in the production environment 
+and use case presented. It suffers from several problems, one of them being cold start (which movies do we 
+recommend to new users ?). The important objective here being the productionization and A/B testing experiment design
+and deployment, the model developed here is probably enough for the scope of this project.
 
 ## Experiment design
 
