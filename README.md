@@ -24,7 +24,8 @@ This is the first repository/tutorial from a series of others where I challenge 
 explain an end to end data science solution to a concrete business use case.
 
 For this first project, the main goal is to demonstrate the design and deployment of an A/B test experiment comparing
-the end business value of two different recommender systems (the user clicking on the recommendations).
+the end business value of two different recommender systems, by creating an easy to deploy and scale containerized 
+microservices architecture.
 
 While the compared machine learning models are recommendation systems, the approach detailed here works for comparing
 two models of any type.
@@ -39,11 +40,11 @@ So here we go !
 
 ## Objectives
 
-#### Main objective :
-Design and deploy an A/B test experiment evaluating and comparing the online performance of two different recommender 
-systems.
+#### Main objectives :
+* Design an A/B test experiment to compare the two recommender systems
+* Create, configure and deploy the architecture to run the experiment
 #### Secondary objectives : 
-* Train recommender systems
+* Train two recommender systems : the baseline and improved models
 * Develop and deploy a proof of concept product website to run the experiment
 * Automate the A/B testing experiment for testing purposes
 
@@ -56,37 +57,38 @@ user recommendation click-through rate.
 
 ## System design
 
-The MovieLens 25M dataset will first be used to train two recommender systems, the baseline model and the supposedly
-new model.
-Recommendations prediction request from user traffic will be routed randomly to one of the two recommender
-systems and recommendations will be shown on the website. If the user clicks on one of the recommendations, 
-the click will be collected and stored to evaluate possible statistically significant change in click-through rate.
+The MovieLens 25M dataset will first be used to train two recommender systems : the baseline model, yielding a 7% CTR,
+and the challenger model. Recommendations prediction request from user traffic will be routed randomly to one of the 
+two recommender systems and recommendations will be shown on the website. If the user clicks on one of the 
+recommendations, the click will be collected and stored to evaluate possible statistically significant change
+in click-through rate.
 
 ![System diagram](./ressources/system_diagram.png)
 
-Kubernetes and Seldon Core will be used to deploy the two recommender systems. It will make this A/B testing experiment easier as
-it will provide a unified endpoint to query for recommendations, taking care of the random routing and even feedback
-and evaluation loop by collecting custom metrics such as in this case the click-through rate through a 
-special feedback endpoint. It also integrates well with Prometheus and Grafana and that will allow us 
-to monitor the experiment's results.
+Docker, Kubernetes and Seldon Core will be used to deploy the two recommender systems. It will make this A/B testing experiment easier as
+it will provide a unified endpoint to query for recommendations, taking care of the random routing and the feedback
+and evaluation loop by collecting custom metrics such as in this case the click-through rate through another
+special feedback endpoint. It also integrates well with Prometheus and Grafana which will allow 
+monitoring of the experiment's results.
 
 Flask will be used to build a mock website in order to test the implementation and run the mock A/B test experiment 
 and selenium will be used to simulate user traffic and interaction on this website.
 
-One ida to improve this overall system would be to also implement periodical online re-training so that the model 
-would take into consideration new user interactions with movies. This improvement brings alone its fair share
-of new problems (eg. long and costly retraining, adapting the A/B testing statistics) so we will focus here on the
-deployment and serving of the models and the A/B test experiment.
+One idea to improve this overall system would be to also implement periodical online re-training so that the model 
+would take into consideration new user interactions with movies and to palliate any possible data drift.
+This improvement brings alone its fair share of new problems (eg. long and costly retraining, adapting the A/B testing
+statistics) so we will focus here on the deployment and serving of the models and the A/B test experiment.
 
 ## Project steps
 
-1. Train the two compared recommender systems (baseline and new)
+1. Train the two recommender systems to be compared
 2. Design the A/B experiment
-3. Deploy and serve the two models, configure deployment
-4. Test deployment and serving
-5. Develop the mock website
-6. Automate user traffic and interaction
-7. Explore and interpret the A/B experiment results
+3. Create, configure and deploy the containerized architecture
+4. Deploy and serve the two models
+5. Test deployment and serving
+6. Develop the mock website
+7. Automate user traffic and interaction
+8. Explore and interpret the A/B experiment results
 
 ## Tools and packages
 
@@ -98,7 +100,7 @@ deployment and serving of the models and the A/B test experiment.
 | Mock experiment website | Flask |
 | Experiment simulation | selenium |
 | Metrics and dashboard | Prometheus, Grafana |
-| Deployment | Kubernetes, helm, Google |
+| Deployment | Kubernetes, helm |
 
 ## Data
 
@@ -115,12 +117,17 @@ The code in this repository assumes that the data is present in the ```/data``` 
 
 ## Data preprocessing
 
-## Recommender system
+## Baseline model
 
-It is worth noting that the recommender system obtained is still not perfect, especially in the production environment 
-and use case presented. It suffers from several problems, one of them being cold start (which movies do we 
-recommend to new users ?). The important objective here being the productionization and A/B testing experiment design
-and deployment, the model developed here is probably enough for the scope of this project.
+The baseline model 
+
+## Challenger model
+
+It is worth noting that the two recommender systems obtained are still not perfect, especially in the production
+environment and use case presented. It suffers from several problems, one of them being cold start (what do we 
+recommend to new users ? how do we recommend new movies ?) or retraining (how do we take into account new
+interactions ?) The important objective here being the productionization and A/B testing experiment design and 
+deployment, the model developed here is probably enough for the scope of this project.
 
 ## Experiment design
 
@@ -137,4 +144,7 @@ F. Maxwell Harper and Joseph A. Konstan. 2015. The MovieLens Datasets: History a
 Interactive Intelligent Systems (TiiS) 5, 4: 19:1–19:19. https://doi.org/10.1145/2827872
 
 ## Challenges and future work
+
+The current setup suffers from the following problems :
+1. New user or new interactions -> this is a problem on the data, deployment and front
 🚧 In progress 🚧
