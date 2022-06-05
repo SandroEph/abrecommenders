@@ -131,7 +131,7 @@ deployment, the model developed here is probably enough for the scope of this pr
 
 ## Experiment design
 
-Details of the experiment design can be found in [this notebook](01%20-%20Recommender%20systems.ipynb).
+Details of the experiment design can be found in [this notebook](02%20-%20AB%20experiment.ipynb).
 
 Taking into consideration the current supposed baseline click-through rate of 7%, and deciding that the desired 
 minimum detectable effect is 4% (absolute), the needed sample size for each group of the experiment (each recommender)
