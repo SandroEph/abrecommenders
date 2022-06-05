@@ -131,7 +131,15 @@ deployment, the model developed here is probably enough for the scope of this pr
 
 ## Experiment design
 
+Details of the experiment design can be found in [this notebook](01%20-%20Recommender%20systems.ipynb).
+
+Taking into consideration the current supposed baseline click-through rate of 7%, and deciding that the desired 
+minimum detectable effect is 4% (absolute), the needed sample size for each group of the experiment (each recommender)
+is estimated to be **1124 users** for a 5% significance level and a 90% power. 
+
 ## Integration and deployment
+
+## Experiment simulation 
 
 ## Results
 
@@ -145,6 +153,4 @@ Interactive Intelligent Systems (TiiS) 5, 4: 19:1–19:19. https://doi.org/10.11
 
 ## Challenges and future work
 
-The current setup suffers from the following problems :
-1. New user or new interactions -> this is a problem on the data, deployment and front
 🚧 In progress 🚧
