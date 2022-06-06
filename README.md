@@ -131,11 +131,16 @@ deployment, the model developed here is probably enough for the scope of this pr
 
 ## Experiment design
 
-Details of the experiment design can be found in [this notebook](02%20-%20AB%20experiment.ipynb).
+A one-tailed Z-test will be used to understand if the challenger model yields a better click-through rate.
+The two hypothesis considered are the following :
+- H0 : The baseline and challenger model yields in average the same recommendation click-through rate (p2 = p1)
+- H1 : The challenger model yields in average a higher recommendation click-through rate than the baseline model
+  (p2>p1)
 
 Taking into consideration the current supposed baseline click-through rate of 7%, and deciding that the desired 
 minimum detectable effect is 4% (absolute), the needed sample size for each group of the experiment (each recommender)
-is estimated to be **1124 users** for a 5% significance level and a 90% power. 
+is estimated to be **925 users** for a 5% significance level and a 90% power. 
+Details of the experiment design can be found in [this notebook](02%20-%20AB%20experiment.ipynb).
 
 ## Integration and deployment
 
