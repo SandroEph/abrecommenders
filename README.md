@@ -29,6 +29,7 @@ microservices architecture.
 
 While the compared machine learning models are recommendation systems, the approach detailed here works for comparing
 two models of any type.
+
 ## Background
 
 This project is inspired from a question I was asked during an interview : 
@@ -74,10 +75,16 @@ monitoring of the experiment's results.
 Flask will be used to build a mock website in order to test the implementation and run the mock A/B test experiment 
 and selenium will be used to simulate user traffic and interaction on this website.
 
-One idea to improve this overall system would be to also implement periodical online re-training so that the model 
-would take into consideration new user interactions with movies and to palliate any possible data drift.
-This improvement brings alone its fair share of new problems (eg. long and costly retraining, adapting the A/B testing
-statistics) so we will focus here on the deployment and serving of the models and the A/B test experiment.
+One important thing to note is that there are still improvements that could be made to this overall system in order
+for it to be ready for a production grade deployment :
+- Implement periodical online re-training so that the model would take into 
+consideration new user interactions with movies and to palliate any possible data drift. 
+- Solve the cold start problem i.e. what should be recommended to a new user, as there is no information about their
+movies interactions.
+
+These improvements bring alone their fair share of new implementation challenges (eg. long and costly retraining,
+adapting the A/B testing statistics) so we will focus here on the deployment and serving of the models and the A/B test
+experiment.
 
 ## Project steps
 
